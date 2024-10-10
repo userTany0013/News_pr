@@ -7,7 +7,6 @@ from django.db.models.functions import Coalesce
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
-    posts = models.Manager()
 
     def update_rating(self):
         posts_rating = self.posts.aggregate(pr=Coalesce(Sum('rating'), 0)).get('pr')
@@ -23,7 +22,7 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='post')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
     article_or_news = models.IntegerField(default=0)
     date_time = models.DateTimeField(auto_now_add=True)
     post_category = models.ManyToManyField(Category, through='PostCategory')
